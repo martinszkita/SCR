@@ -1,5 +1,5 @@
 #include "kopalnia.hh"
-#include <vector>
+#include <iostream>
 
 #define PLIK_WEJSCIOWY "dane.txt"
 
@@ -7,7 +7,7 @@ using namespace std;
 
 // w jednym wozku tylko jeden rodzaj kamienia moze byc
 
-int main()
+int main(int argc , char ** argv)
 {
 
     ifstream dane_plik(PLIK_WEJSCIOWY);
@@ -21,7 +21,7 @@ int main()
 
     // wcztytywanie z pliku do vectora wozkow
     string bufor;
-    // Wozek *wozek_tmp = nullptr;
+    Wozek *wozek_tmp = nullptr;
 
     while(getline(dane_plik,bufor)){ // dopoki udaje sie czytac z pliku
 
@@ -46,7 +46,6 @@ int main()
         {
             ktore_slowo = ktore_slowo % 4;
             if (ktore_slowo ==0){
-                //wozek_tmp = new Wozek;
                 _numer = stoi(slowo);
                 _minuta = ktora_minuta;
             }
@@ -62,16 +61,19 @@ int main()
 
                 _waga = stoi(slowo);
                 _czas_obslugi = (_waga) * (_liczba_kamieni);
-                Wozek wozek_tmp(_minuta, _numer, _liczba_kamieni, _waga, _nazwa_kamienia);
+                
+                wozek_tmp = new Wozek;
 
-                // if (wozek_tmp == nullptr)
-                // {
-                //     cerr << "blad dodawania wozka do wektora!\n";
-                //     return -1;
-                // }
-                // wozek_tmp = new Wozek()
-                wozki_vec.push_back(wozek_tmp);
-                //delete wozek_tmp;
+                wozek_tmp->minuta = _minuta;
+                wozek_tmp->numer = _numer;
+                wozek_tmp->waga = _waga;
+                wozek_tmp->liczba_kamieni = _liczba_kamieni;
+                wozek_tmp->nazwa_kamienia = _nazwa_kamienia;
+                wozek_tmp->czas_obslugi = _czas_obslugi;
+
+                wozki_vec.push_back(*wozek_tmp);
+                
+                delete wozek_tmp;
             }
             ktore_slowo++;
         }
@@ -79,7 +81,10 @@ int main()
     }
     dane_plik.close();
 
-    Kopalnia kopalnia(wozki_vec,1);
+    for (int i = 0; i < wozki_vec.size(); i++){
+        cout << wozki_vec[i].minuta << " " << wozki_vec[i].nazwa_kamienia << " " << wozki_vec[i].liczba_kamieni << " " << wozki_vec[i].waga << endl;
+    }
+    Kopalnia kopalnia(wozki_vec, 2);
 
     kopalnia.FCFS();
 }
